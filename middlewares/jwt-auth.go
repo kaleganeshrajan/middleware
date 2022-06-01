@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"jwt_gin/service"
+	"github.com/kaleganeshrajan/middleware/service"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
