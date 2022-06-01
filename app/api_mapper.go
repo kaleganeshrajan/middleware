@@ -1,7 +1,7 @@
 package app
 
 import (
-	"jwt_gin/controllers"
+	"github.com/kaleganeshrajan/middleware/controllers"
 	"jwt_gin/middlewares"
 
 	"github.com/gin-gonic/gin"

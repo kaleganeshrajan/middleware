@@ -27,6 +27,11 @@ github.com/golang/protobuf/proto
 # github.com/json-iterator/go v1.1.9
 ## explicit; go 1.12
 github.com/json-iterator/go
+# github.com/kaleganeshrajan/middleware v0.0.0-20220601053509-7d0d81fc4415
+## explicit
+github.com/kaleganeshrajan/middleware/controllers
+github.com/kaleganeshrajan/middleware/models
+github.com/kaleganeshrajan/middleware/service
 # github.com/leodido/go-urn v1.2.0
 ## explicit; go 1.13
 github.com/leodido/go-urn
