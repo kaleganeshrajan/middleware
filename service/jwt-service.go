@@ -33,7 +33,7 @@ func NewJWTService() JWTService {
 }
 
 func getSecretKey() string {
-	secret := os.Getenv("middleware_test")
+	secret := os.Getenv("AUTHINTICATION_KEY")
 	return secret
 }
 
