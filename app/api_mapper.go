@@ -23,8 +23,8 @@ func NewApp(r *gin.Engine, c controllers.Controller) AppInterface {
 }
 
 func (a *AppInst) MapUrls() {
-	login := a.router.Group("/api")
-	{
-		login.POST("/Login", a.controller.LC.Login)
-	}
+	// login := a.router.Group("/api")
+	// {
+	// 	login.POST("/Login", a.controller.LC.Login)
+	// }
 }

@@ -11,17 +11,22 @@ import (
 )
 
 // AuthorizeJWT validates the token from the http request, returning a 401 if it's not valid
-func AuthorizeJWT() gin.HandlerFunc {
+func AuthorizeJWT(sRefreshToken bool, isSetCookie bool, cookieName string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		const BEARER_SCHEMA = "Bearer "
-		// authHeader := c.GetHeader("Authorization")
-		// tokenString := authHeader[len(BEARER_SCHEMA):]
-		tokenString, err := c.Cookie("token")
-		if err != nil {
-			c.AbortWithStatus(http.StatusInternalServerError)
-		}
+		tokenString :=""
+		var err error
+		if !isSetCookie {
+			authHeader := c.GetHeader("Authorization")
+			tokenString = authHeader[len(BEARER_SCHEMA):]
+		}else{
+			tokenString, err = c.Cookie(cookieName)
+			if err != nil {
+				c.AbortWithStatus(http.StatusInternalServerError)
+			}
+		}		
 
-		token, err := service.NewJWTService().ValidateToken(tokenString, c)
+		token, err := service.NewJWTService().ValidateToken(tokenString, c, sRefreshToken)
 
 		if token.Valid {
 			claims := token.Claims.(jwt.MapClaims)

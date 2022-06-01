@@ -1,5 +1,5 @@
 package controllers
 
 type Controller struct {
-	LC LoginController
+	// LC LoginController
 }

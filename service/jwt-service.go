@@ -9,8 +9,8 @@ import (
 )
 
 type JWTService interface {
-	GenerateToken(username string, admin bool, c *gin.Context) (string, error)
-	ValidateToken(tokenString string,c *gin.Context) (*jwt.Token, error)
+	// GenerateToken(username string, admin bool, c *gin.Context) (string, error)
+	ValidateToken(tokenString string, c *gin.Context, sRefreshToken bool) (*jwt.Token, error)
 }
 
 type jwtCustomClaims struct {
@@ -61,25 +61,28 @@ func (servie *jwtService) GenerateToken(username string, admin bool, c *gin.Cont
 	return t, nil
 }
 
-func (jwtSrv *jwtService) ValidateToken(tokenString string,c *gin.Context) (*jwt.Token, error) {
+func (jwtSrv *jwtService) ValidateToken(tokenString string, c *gin.Context, sRefreshToken bool) (*jwt.Token, error) {
 	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 		}
-		err:=RefreshToken(c)
-		if err!=nil{
-			return nil, err
+		if sRefreshToken {
+			err := RefreshToken(c)
+			if err != nil {
+				return nil, err
+			}
 		}
+
 		return []byte(jwtSrv.secretKey), nil
 	})
 }
 
-func RefreshToken(c *gin.Context) (error) {
+func RefreshToken(c *gin.Context) error {
 
 	tokenString, err := c.Cookie("token")
 
 	claims := &jwtCustomClaims{}
-	secrateKey:=[]byte(getSecretKey())
+	secrateKey := []byte(getSecretKey())
 	tkn, err := jwt.ParseWithClaims(tokenString, claims,
 		func(t *jwt.Token) (interface{}, error) {
 			return secrateKey, nil
@@ -89,11 +92,11 @@ func RefreshToken(c *gin.Context) (error) {
 		if err == jwt.ErrSignatureInvalid {
 			return err
 		}
-		return  err
+		return err
 	}
 
 	if !tkn.Valid {
-		return  err
+		return err
 	}
 
 	expirationTime := time.Now().Add(time.Second * 30)
@@ -107,12 +110,6 @@ func RefreshToken(c *gin.Context) (error) {
 	}
 
 	c.SetCookie("token", t, int(expirationTime.Unix()), "/", "localhost", false, false)
-
-	// http.SetCookie(w, &http.Cookie{
-	// 	Name:    "token",
-	// 	Value:   t,
-	// 	Expires: expireTime,
-	// })
 
 	return nil
 }
