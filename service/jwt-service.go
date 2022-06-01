@@ -11,7 +11,6 @@ import (
 )
 
 type JWTService interface {
-	// GenerateToken(username string, admin bool, c *gin.Context) (string, error)
 	ValidateToken(tokenString string, c *gin.Context) (*jwt.Token, error)
 }
 
@@ -84,7 +83,7 @@ func RefreshToken(c *gin.Context) error {
 		return err
 	}
 
-	c.SetCookie("token", t, int(expirationTime.Unix()), "/", os.Getenv("DOMAIN"), false, false)
+	c.SetCookie("token", t, int(expirationTime.Unix()), "/", os.Getenv("TRUSTED_PROXY"), false, false)
 
 	return nil
 }
