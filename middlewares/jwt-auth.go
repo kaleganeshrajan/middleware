@@ -31,7 +31,7 @@ func AuthorizeJWT() gin.HandlerFunc {
 			 
 			logger.Info("Claims Details",
 				zap.String("Claims[Name]: ", claims["name"].(string)),
-				zap.String("Claims[Admin]: ", claims["admin"].(string)),
+				zap.Bool("Claims[Admin]: ", claims["admin"].(bool)),
 				zap.String("Claims[Issuer]: ", claims["iss"].(string)),
 				zap.String("Claims[IssuedAt]: ", claims["iat"].(string)),
 				zap.String("Claims[ExpiresAt]: ", claims["exp"].(string)))
