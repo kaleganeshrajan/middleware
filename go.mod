@@ -1,4 +1,4 @@
-module jwt_gin
+module github.com/kaleganeshrajan/middleware
 
 go 1.18
 

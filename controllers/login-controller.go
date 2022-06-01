@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"jwt_gin/models"
-	"jwt_gin/service"
+	"github.com/kaleganeshrajan/middleware/models"
+	"github.com/kaleganeshrajan/middleware/service"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

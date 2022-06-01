@@ -1,9 +1,9 @@
 package main
 
 import (
-	"jwt_gin/app"
-	"jwt_gin/controllers"
-	"jwt_gin/service"
+	"github.com/kaleganeshrajan/middleware/app"
+	"github.com/kaleganeshrajan/middleware/controllers"
+	"github.com/kaleganeshrajan/middleware/service"
 	"log"
 	"os"
 
