@@ -6,10 +6,11 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"github.com/kaleganeshrajan/middleware/logger"
 )
 
 type JWTService interface {
-	GenerateToken(username string, admin bool, c *gin.Context) (string, error)
+	// GenerateToken(username string, admin bool, c *gin.Context) (string, error)
 	ValidateToken(tokenString string,c *gin.Context) (*jwt.Token, error)
 }
 
@@ -36,32 +37,8 @@ func getSecretKey() string {
 	return secret
 }
 
-func (servie *jwtService) GenerateToken(username string, admin bool, c *gin.Context) (string, error) {
-
-	expireTime := time.Now().Add(time.Second * 60)
-	claims := &jwtCustomClaims{
-		username,
-		admin,
-		jwt.StandardClaims{
-			ExpiresAt: expireTime.Unix(),
-			Issuer:    servie.issuer,
-			IssuedAt:  time.Now().Unix(),
-		},
-	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	t, err := token.SignedString([]byte(servie.secretKey))
-	if err != nil {
-		return "", err
-	}
-
-	c.SetCookie("token", t, int(expireTime.Unix()), "/", "localhost", false, false)
-
-	return t, nil
-}
-
 func (jwtSrv *jwtService) ValidateToken(tokenString string,c *gin.Context) (*jwt.Token, error) {
+	logger.Info("Token validation started")
 	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])

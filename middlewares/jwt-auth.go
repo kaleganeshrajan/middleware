@@ -1,9 +1,10 @@
 package middlewares
 
 import (
-	"log"
 	"net/http"
 
+	"github.com/kaleganeshrajan/middleware/logger"
+	"go.uber.org/zap"
 	"github.com/kaleganeshrajan/middleware/service"
 
 	"github.com/dgrijalva/jwt-go"
@@ -13,11 +14,13 @@ import (
 // AuthorizeJWT validates the token from the http request, returning a 401 if it's not valid
 func AuthorizeJWT() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		const BEARER_SCHEMA = "Bearer "
+		logger.Info("Log validation started")
+		// const BEARER_SCHEMA = "Bearer "
 		// authHeader := c.GetHeader("Authorization")
 		// tokenString := authHeader[len(BEARER_SCHEMA):]
 		tokenString, err := c.Cookie("token")
 		if err != nil {
+			logger.Error("Token string error",err)
 			c.AbortWithStatus(http.StatusInternalServerError)
 		}
 
@@ -25,13 +28,16 @@ func AuthorizeJWT() gin.HandlerFunc {
 
 		if token.Valid {
 			claims := token.Claims.(jwt.MapClaims)
-			log.Println("Claims[Name]: ", claims["name"])
-			log.Println("Claims[Admin]: ", claims["admin"])
-			log.Println("Claims[Issuer]: ", claims["iss"])
-			log.Println("Claims[IssuedAt]: ", claims["iat"])
-			log.Println("Claims[ExpiresAt]: ", claims["exp"])
+			 
+			logger.Info("Claims Details",
+				zap.String("Claims[Name]: ", claims["name"].(string)),
+				zap.String("Claims[Admin]: ", claims["Admin"].(string)),
+				zap.String("Claims[Issuer]: ", claims["Issuer"].(string)),
+				zap.String("Claims[IssuedAt]: ", claims["IssuedAt"].(string)),
+				zap.String("Claims[ExpiresAt]: ", claims["ExpiresAt"].(string)))
+			
 		} else {
-			log.Println(err)
+			logger.Error("Token validation error",err)
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
 	}
