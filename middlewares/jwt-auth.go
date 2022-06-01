@@ -30,11 +30,11 @@ func AuthorizeJWT() gin.HandlerFunc {
 			claims := token.Claims.(jwt.MapClaims)
 			 
 			logger.Info("Claims Details",
-				zap.String("Claims[Name]: ", claims["name"].(string)),
-				zap.Bool("Claims[Admin]: ", claims["admin"].(bool)),
-				zap.String("Claims[Issuer]: ", claims["iss"].(string)),
-				zap.Int64("Claims[IssuedAt]: ", claims["iat"].(int64)),
-				zap.Int64("Claims[ExpiresAt]: ", claims["exp"].(int64)))
+				zap.Any("Claims[Name]: ", claims["name"]),
+				zap.Any("Claims[Admin]: ", claims["admin"]),
+				zap.Any("Claims[Issuer]: ", claims["iss"]),
+				zap.Any("Claims[IssuedAt]: ", claims["iat"]),
+				zap.Any("Claims[ExpiresAt]: ", claims["exp"]))
 			
 		} else {
 			logger.Error("Token validation error",err)
