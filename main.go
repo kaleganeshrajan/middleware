@@ -13,10 +13,8 @@ import (
 var (
 	loginService    service.LoginService    = service.NewLoginService()
 	jwtService      service.JWTService      = service.NewJWTService()
-	authtestService service.AuthTestService = service.NewAuthTestService()
 
 	loginController    controllers.LoginController    = controllers.NewLoginController(loginService, jwtService)
-	authtestController controllers.AuthtestController = controllers.NewAuthtestController(authtestService)
 )
 
 func main() {
@@ -26,7 +24,7 @@ func main() {
 	os.Setenv("TRUSTED_PROXY", "localhost")
 	r.SetTrustedProxies([]string{os.Getenv("TRUSTED_PROXY")})
 
-	appObj := app.NewApp(r, controllers.Controller{LC: loginController, AT: authtestController})
+	appObj := app.NewApp(r, controllers.Controller{LC: loginController})
 
 	appObj.MapUrls()
 	log.Printf("Url mapping done")
