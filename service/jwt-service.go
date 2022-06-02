@@ -16,7 +16,7 @@ type JWTService interface {
 
 type jwtCustomClaims struct {
 	Name  string `json:"name"`
-	Admin bool   `json:"admin"`
+	// Admin bool   `json:"admin"`
 	jwt.StandardClaims
 }
 
