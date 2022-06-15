@@ -15,7 +15,7 @@ type JWTService interface {
 }
 
 type jwtCustomClaims struct {
-	Name  string `json:"name"`
+	Name string `json:"name"`
 	// Admin bool   `json:"admin"`
 	jwt.StandardClaims
 }
@@ -43,10 +43,10 @@ func (jwtSrv *jwtService) ValidateToken(tokenString string, c *gin.Context) (*jw
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 		}
-		err := RefreshToken(c)
-		if err != nil {
-			return nil, err
-		}
+		// err := RefreshToken(c)
+		// if err != nil {
+		// 	return nil, err
+		// }
 		return []byte(jwtSrv.secretKey), nil
 	})
 }
@@ -73,7 +73,7 @@ func RefreshToken(c *gin.Context) error {
 		return err
 	}
 
-	expirationTime := time.Now().Add(time.Second * 30)
+	expirationTime := time.Now().Add(time.Minute * 60)
 
 	claims.ExpiresAt = expirationTime.Unix()
 
