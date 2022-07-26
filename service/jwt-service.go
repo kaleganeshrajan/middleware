@@ -73,7 +73,7 @@ func RefreshToken(c *gin.Context) error {
 		return err
 	}
 
-	expirationTime := time.Now().Add(time.Minute * 60)
+	expirationTime := time.Now().Add(time.Minute * 180)
 
 	claims.ExpiresAt = expirationTime.Unix()
 
