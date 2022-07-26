@@ -15,14 +15,14 @@ import (
 func AuthorizeJWT() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		logger.Info("Log validation started")
-		// const BEARER_SCHEMA = "Bearer "
-		// authHeader := c.GetHeader("Authorization")
-		// tokenString := authHeader[len(BEARER_SCHEMA):]
-		tokenString, err := c.Cookie("token")
-		if err != nil {
-			logger.Error("Token string error",err)
-			c.AbortWithStatus(http.StatusInternalServerError)
-		}
+		const BEARER_SCHEMA = "Bearer "
+		authHeader := c.GetHeader("Authorization")
+		tokenString := authHeader[len(BEARER_SCHEMA):]
+		// tokenString, err := c.Cookie("token")
+		// if err != nil {
+		// 	logger.Error("Token string error",err)
+		// 	c.AbortWithStatus(http.StatusInternalServerError)
+		// }
 
 		token, err := service.NewJWTService().ValidateToken(tokenString, c)
 
