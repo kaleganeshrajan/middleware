@@ -44,7 +44,7 @@ func AuthorizeJWT() gin.HandlerFunc {
 }
 
 // AuthorizeJWT validates the token from cookies the http request, returning a 401 if it's not valid
-func Authorize_JWT_Parameters(time_duration int64) gin.HandlerFunc {
+func Authorize_JWT_Parameters(session_time int64) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		logger.Info("Log validation started")
 		const BEARER_SCHEMA = "Bearer "
@@ -56,7 +56,7 @@ func Authorize_JWT_Parameters(time_duration int64) gin.HandlerFunc {
 		// 	c.AbortWithStatus(http.StatusInternalServerError)
 		// }
 
-		token, err := service.NewJWTService().ValidateToken(tokenString, c)
+		token, err := service.NewJWTService().ValidateTokenwithParameters(tokenString,session_time, c)
 
 		if token.Valid {
 			claims := token.Claims.(jwt.MapClaims)

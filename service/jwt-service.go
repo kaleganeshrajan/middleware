@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 	"time"
 
@@ -12,6 +13,7 @@ import (
 
 type JWTService interface {
 	ValidateToken(tokenString string, c *gin.Context) (*jwt.Token, error)
+	ValidateTokenwithParameters(tokenString string, session_time int64, c *gin.Context) (*jwt.Token, error)
 }
 
 type jwtCustomClaims struct {
@@ -51,9 +53,23 @@ func (jwtSrv *jwtService) ValidateToken(tokenString string, c *gin.Context) (*jw
 	})
 }
 
-func RefreshToken(c *gin.Context) error {
+func (jwtSrv *jwtService) ValidateTokenwithParameters(tokenString string, session_time int64, c *gin.Context) (*jwt.Token, error) {
+	logger.Info("Token validation started")
+	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+		err := RefreshToken(tokenString, session_time, c)
+		if err != nil {
+			return nil, err
+		}
+		return []byte(jwtSrv.secretKey), nil
+	})
+}
 
-	tokenString, err := c.Cookie("token")
+func RefreshToken(tokenString string, session_time int64, c *gin.Context) error {
+
+	// tokenString, err := c.Cookie("token")
 
 	claims := &jwtCustomClaims{}
 	secrateKey := []byte(getSecretKey())
@@ -73,7 +89,8 @@ func RefreshToken(c *gin.Context) error {
 		return err
 	}
 
-	expirationTime := time.Now().Add(time.Minute * 180)
+	time_duration := (time.Minute * time.Duration(rand.Int63n(session_time)))
+	expirationTime := time.Now().Add(time_duration)
 
 	claims.ExpiresAt = expirationTime.Unix()
 
