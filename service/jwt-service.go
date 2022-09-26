@@ -88,14 +88,17 @@ func RefreshToken(tokenString string, session_time int64, c *gin.Context) error 
 	}
 
 	expirationTime := time.Now().Add(time.Minute * time.Duration(session_time))
-	
+
 	claims.ExpiresAt = expirationTime.Unix()
-	fmt.Println(time.Unix(claims.ExpiresAt,0))
-	tt:=time.Now()
+	fmt.Println(time.Unix(claims.ExpiresAt, 0))
+	tt := time.Now()
 	fmt.Println(tt)
 
-	fmt.Println(tt.Sub(time.Unix(claims.ExpiresAt,0)))
-	
+	diff := tt.Sub(time.Unix(claims.ExpiresAt, 0))
+
+	out := time.Time{}.Add(diff)
+	fmt.Println(out.Format("04"))
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	t, err := token.SignedString([]byte(secrateKey))
 	if err != nil {
