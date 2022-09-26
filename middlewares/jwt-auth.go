@@ -43,7 +43,7 @@ func AuthorizeJWT() gin.HandlerFunc {
 	}
 }
 
-// AuthorizeJWT validates the token from cookies the http request, returning a 401 if it's not valid
+// AuthorizeJWT validates the token with parametrs the http request, returning a 401 if it's not valid
 func Authorize_JWT_Parameters(session_time int64) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		logger.Info("Log validation started")
