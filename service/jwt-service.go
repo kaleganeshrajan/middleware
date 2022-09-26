@@ -69,7 +69,6 @@ func (jwtSrv *jwtService) ValidateTokenwithParameters(tokenString string, sessio
 func RefreshToken(tokenString string, session_time int64, c *gin.Context) error {
 	logger.Info("Refresh token validation started")
 	// tokenString, err := c.Cookie("token")
-	fmt.Println(tokenString)
 	claims := &jwtCustomClaims{}
 	secrateKey := []byte(getSecretKey())
 	tkn, err := jwt.ParseWithClaims(tokenString, claims,
@@ -87,12 +86,12 @@ func RefreshToken(tokenString string, session_time int64, c *gin.Context) error 
 	if !tkn.Valid {
 		return err
 	}
-	// fmt.Println(session_time)
+
 	expirationTime := time.Now().Add(time.Minute * time.Duration(session_time))
-	// fmt.Println(time.Unix(claims.ExpiresAt, 0))	 
-	fmt.Println(claims.ExpiresAt)	 
-	fmt.Println(time.Now().Unix())
+	
 	claims.ExpiresAt = expirationTime.Unix()
+	fmt.Println(time.Unix(claims.ExpiresAt,0))
+	fmt.Println(time.Now())
 	
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	t, err := token.SignedString([]byte(secrateKey))
