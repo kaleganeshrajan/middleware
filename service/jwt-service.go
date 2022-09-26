@@ -2,7 +2,6 @@ package service
 
 import (
 	"fmt"
-	"math/rand"
 	"os"
 	"time"
 
@@ -88,7 +87,7 @@ func RefreshToken(tokenString string, session_time int64, c *gin.Context) error 
 	if !tkn.Valid {
 		return err
 	}
-	tt :=time.Duration(session_time)
+	tt := time.Duration(session_time)
 	fmt.Println(tt)
 	time_duration := time.Minute * tt
 	fmt.Println(time_duration) //("Time Duration : -" +  )
