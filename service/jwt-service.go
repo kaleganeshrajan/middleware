@@ -88,8 +88,9 @@ func RefreshToken(tokenString string, session_time int64, c *gin.Context) error 
 	if !tkn.Valid {
 		return err
 	}
-
-	time_duration := (time.Minute * time.Duration(rand.Int63n(session_time)))
+	tt :=time.Duration(session_time)
+	fmt.Println(tt)
+	time_duration := time.Minute * tt
 	fmt.Println(time_duration) //("Time Duration : -" +  )
 	expirationTime := time.Now().Add(time_duration)
 	fmt.Println(expirationTime)
