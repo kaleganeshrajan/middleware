@@ -90,8 +90,8 @@ func RefreshToken(tokenString string, session_time int64, c *gin.Context) error 
 	 
 	expirationTime := time.Now().Add(time.Minute * time.Duration(session_time))
 	fmt.Println(time.Unix(claims.ExpiresAt, 0))	 
-	fmt.Println(claims.ExpiresAt, 0)	 
-	fmt.Println(time.Now().Unix())
+	// fmt.Println(claims.ExpiresAt)	 
+	// fmt.Println(time.Now().Unix())
 	claims.ExpiresAt = expirationTime.Unix()
 	
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
