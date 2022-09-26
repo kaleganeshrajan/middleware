@@ -42,7 +42,7 @@ func (jwtSrv *jwtService) ValidateToken(tokenString string, c *gin.Context) (*jw
 	logger.Info("Token validation started")
 	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 		// err := RefreshToken(c)
 		// if err != nil {
@@ -56,7 +56,7 @@ func (jwtSrv *jwtService) ValidateTokenwithParameters(tokenString string, sessio
 	logger.Info("Token validation started")
 	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 		err := RefreshToken(tokenString, session_time, c)
 		if err != nil {
