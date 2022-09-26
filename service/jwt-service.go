@@ -69,7 +69,7 @@ func (jwtSrv *jwtService) ValidateTokenwithParameters(tokenString string, sessio
 func RefreshToken(tokenString string, session_time int64, c *gin.Context) error {
 	logger.Info("Refresh token validation started")
 	// tokenString, err := c.Cookie("token")
-
+	fmt.Println(tokenString)
 	claims := &jwtCustomClaims{}
 	secrateKey := []byte(getSecretKey())
 	tkn, err := jwt.ParseWithClaims(tokenString, claims,
