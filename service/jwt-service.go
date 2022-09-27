@@ -90,19 +90,20 @@ func RefreshToken(tokenString string, session_time int64, c *gin.Context) error 
 	expirationTime := time.Now().Add(time.Minute * time.Duration(session_time))
 
 	claims.ExpiresAt = expirationTime.Unix()
-	 
-	current_time := time.Now()	 
 
-	time_difference := current_time.Sub(time.Unix(claims.ExpiresAt, 0))
+	current_time := time.Now()
 
-	if time_difference.Minutes() < 1.5 {
+	time_difference := time.Unix(claims.ExpiresAt, 0).Sub(current_time)
+
+	if time_difference.Minutes() < 1.5 && time_difference.Minutes() > 0 {
+
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 		t, err := token.SignedString([]byte(secrateKey))
 		if err != nil {
 			return err
 		}
 
-		c.SetCookie("token", t, int(expirationTime.Unix()), "/", os.Getenv("TRUSTED_PROXY"), false, false)
+		c.SetCookie("token", t, int(expirationTime.Unix()), "/", os.Getenv("ISSUER"), false, false)
 	}
 
 	return nil
