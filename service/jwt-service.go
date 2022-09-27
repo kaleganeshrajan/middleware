@@ -75,6 +75,8 @@ func RefreshToken(tokenString string, session_time int64, c *gin.Context) error 
 		func(t *jwt.Token) (interface{}, error) {
 			return secrateKey, nil
 		})
+	logger.Info(getSecretKey())
+	logger.Info(tokenString)
 
 	if err != nil {
 		if err == jwt.ErrSignatureInvalid {
@@ -89,14 +91,12 @@ func RefreshToken(tokenString string, session_time int64, c *gin.Context) error 
 
 	expirationTime := time.Now().Add(time.Minute * time.Duration(session_time))
 
-	claims.ExpiresAt = expirationTime.Unix()
-
 	current_time := time.Now()
 
 	time_difference := time.Unix(claims.ExpiresAt, 0).Sub(current_time)
 
 	if time_difference.Minutes() < 1.5 && time_difference.Minutes() > 0 {
-
+		claims.ExpiresAt = expirationTime.Unix()
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 		t, err := token.SignedString([]byte(secrateKey))
 		if err != nil {
