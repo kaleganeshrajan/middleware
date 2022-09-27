@@ -75,8 +75,6 @@ func RefreshToken(tokenString string, session_time int64, c *gin.Context) error 
 		func(t *jwt.Token) (interface{}, error) {
 			return secrateKey, nil
 		})
-	logger.Info(getSecretKey())
-	logger.Info(tokenString)
 
 	if err != nil {
 		if err == jwt.ErrSignatureInvalid {
@@ -95,7 +93,6 @@ func RefreshToken(tokenString string, session_time int64, c *gin.Context) error 
 
 	if time_difference.Minutes() < 1.5 && time_difference.Minutes() > 0 {
 		expirationTime := time.Now().Add(time.Minute * time.Duration(session_time))
-		logger.Info("Session time out")
 		claims.ExpiresAt = expirationTime.Unix()
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 		t, err := token.SignedString([]byte(secrateKey))
@@ -106,7 +103,6 @@ func RefreshToken(tokenString string, session_time int64, c *gin.Context) error 
 		c.SetCookie("token", t, int(expirationTime.Unix()), "/", os.Getenv("ISSUER"), false, false)
 	}
 
-	c.SetCookie("token", tokenString, int(claims.ExpiresAt), "/", os.Getenv("ISSUER"), false, false)
 
 	return nil
 }
