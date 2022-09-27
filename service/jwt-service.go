@@ -100,7 +100,7 @@ func RefreshToken(tokenString string, session_time int64, c *gin.Context) error 
 			return err
 		}
 
-		c.SetCookie("token", t, int(expirationTime.Unix()), "/", os.Getenv("ISSUER"), false, false)
+		c.SetCookie("token", t, int(expirationTime.Unix()), "/", os.Getenv("ISSUER"), true, true)
 	}
 
 
