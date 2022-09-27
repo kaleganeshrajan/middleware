@@ -95,7 +95,7 @@ func RefreshToken(tokenString string, session_time int64, c *gin.Context) error 
 	fmt.Println(tt)
 
 	diff := tt.Sub(time.Unix(claims.ExpiresAt, 0))
-
+	fmt.Println(diff.Minutes())
 	out := time.Time{}.Add(diff)
 	fmt.Println(out.Format("15:04:05"))
 
