@@ -51,8 +51,9 @@ func Authorize_JWT_Parameters(session_time int64) gin.HandlerFunc {
 		logger.Info("Log validation started")
 		const BEARER_SCHEMA = "Bearer "
 		authHeader := c.GetHeader("Authorization")
+		fmt.Println(BEARER_SCHEMA)
 		if len(BEARER_SCHEMA) > 10 {
-			fmt.Println(BEARER_SCHEMA)
+			
 			tokenString := authHeader[len(BEARER_SCHEMA):]
 			// tokenString, err := c.Cookie("token")
 			// if err != nil {
