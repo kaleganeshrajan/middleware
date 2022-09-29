@@ -1,11 +1,12 @@
 package middlewares
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/kaleganeshrajan/middleware/logger"
-	"go.uber.org/zap"
 	"github.com/kaleganeshrajan/middleware/service"
+	"go.uber.org/zap"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -28,16 +29,16 @@ func AuthorizeJWT() gin.HandlerFunc {
 
 		if token.Valid {
 			claims := token.Claims.(jwt.MapClaims)
-			 
+
 			logger.Info("Claims Details",
 				zap.Any("Claims[Name]: ", claims["name"]),
 				// zap.Any("Claims[Admin]: ", claims["admin"]),
 				zap.Any("Claims[Issuer]: ", claims["iss"]),
 				zap.Any("Claims[IssuedAt]: ", claims["iat"]),
 				zap.Any("Claims[ExpiresAt]: ", claims["exp"]))
-			
+
 		} else {
-			logger.Error("Token validation error",err)
+			logger.Error("Token validation error", err)
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
 	}
@@ -49,29 +50,35 @@ func Authorize_JWT_Parameters(session_time int64) gin.HandlerFunc {
 		logger.Info("Log validation started")
 		const BEARER_SCHEMA = "Bearer "
 		authHeader := c.GetHeader("Authorization")
-		tokenString := authHeader[len(BEARER_SCHEMA):]
-		// tokenString, err := c.Cookie("token")
-		// if err != nil {
-		// 	logger.Error("Token string error",err)
-		// 	c.AbortWithStatus(http.StatusInternalServerError)
-		// }
+		if len(BEARER_SCHEMA) > 0 {
+			tokenString := authHeader[len(BEARER_SCHEMA):]
+			// tokenString, err := c.Cookie("token")
+			// if err != nil {
+			// 	logger.Error("Token string error",err)
+			// 	c.AbortWithStatus(http.StatusInternalServerError)
+			// }
 
-		token, err := service.NewJWTService().ValidateTokenwithParameters(tokenString,session_time, c)
+			token, err := service.NewJWTService().ValidateTokenwithParameters(tokenString, session_time, c)
 
-		if token.Valid {
-			claims := token.Claims.(jwt.MapClaims)
-			 
-			logger.Info("Claims Details",
-				zap.Any("Claims[Name]: ", claims["name"]),
-				// zap.Any("Claims[Admin]: ", claims["admin"]),
-				zap.Any("Claims[Issuer]: ", claims["iss"]),
-				zap.Any("Claims[IssuedAt]: ", claims["iat"]),
-				zap.Any("Claims[ExpiresAt]: ", claims["exp"]))
-			
+			if token.Valid {
+				claims := token.Claims.(jwt.MapClaims)
+
+				logger.Info("Claims Details",
+					zap.Any("Claims[Name]: ", claims["name"]),
+					// zap.Any("Claims[Admin]: ", claims["admin"]),
+					zap.Any("Claims[Issuer]: ", claims["iss"]),
+					zap.Any("Claims[IssuedAt]: ", claims["iat"]),
+					zap.Any("Claims[ExpiresAt]: ", claims["exp"]))
+
+			} else {
+				logger.Error("Token validation error", err)
+				c.AbortWithStatus(http.StatusUnauthorized)
+			}
 		} else {
-			logger.Error("Token validation error",err)
+			logger.Error("Token validation error", errors.New("token is empty"))
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
+
 	}
 }
 
@@ -92,16 +99,16 @@ func AuthorizeJWTfromAuthorization() gin.HandlerFunc {
 
 		if token.Valid {
 			claims := token.Claims.(jwt.MapClaims)
-			 
+
 			logger.Info("Claims Details",
 				zap.Any("Claims[Name]: ", claims["name"]),
 				// zap.Any("Claims[Admin]: ", claims["admin"]),
 				zap.Any("Claims[Issuer]: ", claims["iss"]),
 				zap.Any("Claims[IssuedAt]: ", claims["iat"]),
 				zap.Any("Claims[ExpiresAt]: ", claims["exp"]))
-			
+
 		} else {
-			logger.Error("Token validation error",err)
+			logger.Error("Token validation error", err)
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
 	}
