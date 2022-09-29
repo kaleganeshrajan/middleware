@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/kaleganeshrajan/middleware/logger"
@@ -51,6 +52,7 @@ func Authorize_JWT_Parameters(session_time int64) gin.HandlerFunc {
 		const BEARER_SCHEMA = "Bearer "
 		authHeader := c.GetHeader("Authorization")
 		if len(BEARER_SCHEMA) > 0 {
+			fmt.Println(BEARER_SCHEMA)
 			tokenString := authHeader[len(BEARER_SCHEMA):]
 			// tokenString, err := c.Cookie("token")
 			// if err != nil {
