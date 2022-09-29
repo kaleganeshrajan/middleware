@@ -2,7 +2,6 @@ package middlewares
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/kaleganeshrajan/middleware/logger"
@@ -51,9 +50,8 @@ func Authorize_JWT_Parameters(session_time int64) gin.HandlerFunc {
 		logger.Info("Log validation started")
 		const BEARER_SCHEMA = "Bearer "
 		authHeader := c.GetHeader("Authorization")
-		fmt.Println(authHeader)
-		fmt.Println(len(authHeader))
-		if len(BEARER_SCHEMA) > 10 {			
+
+		if len(authHeader) > 100 {
 			tokenString := authHeader[len(BEARER_SCHEMA):]
 			// tokenString, err := c.Cookie("token")
 			// if err != nil {
