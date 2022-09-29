@@ -51,9 +51,9 @@ func Authorize_JWT_Parameters(session_time int64) gin.HandlerFunc {
 		logger.Info("Log validation started")
 		const BEARER_SCHEMA = "Bearer "
 		authHeader := c.GetHeader("Authorization")
-		fmt.Println(BEARER_SCHEMA)
-		if len(BEARER_SCHEMA) > 10 {
-			
+		fmt.Println(authHeader)
+		fmt.Println(len(authHeader))
+		if len(BEARER_SCHEMA) > 10 {			
 			tokenString := authHeader[len(BEARER_SCHEMA):]
 			// tokenString, err := c.Cookie("token")
 			// if err != nil {
@@ -81,7 +81,6 @@ func Authorize_JWT_Parameters(session_time int64) gin.HandlerFunc {
 			logger.Error("Token validation error", errors.New("token is empty"))
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
-
 	}
 }
 
