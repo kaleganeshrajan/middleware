@@ -3,7 +3,6 @@ package service
 import (
 	"fmt"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -106,7 +105,7 @@ func RefreshToken(tokenString string, session_time int64, c *gin.Context) error 
 		c.SetCookie("token", t, int(expirationTime.Unix()), "/", os.Getenv("ISSUER"), true, true)
 	}
 
-	refresh_Token := strings.Split(c.Request.Header["Authorization"][0], " ")[1]
-	fmt.Println("Refresh in middlware :-", refresh_Token)
+	c_rer, _ := c.Cookie("token")
+	fmt.Println("refresh token middleware :- ", c_rer)
 	return nil
 }
