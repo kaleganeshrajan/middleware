@@ -16,7 +16,7 @@ type JWTService interface {
 }
 
 type jwtCustomClaims struct {
-	Name string `json:"name"`
+	Name         string `json:"name"`
 	// Admin bool   `json:"admin"`
 	jwt.StandardClaims
 }
@@ -101,7 +101,7 @@ func RefreshToken(tokenString string, session_time int64, c *gin.Context) error 
 			return err
 		}
 		fmt.Println("Token :- ", t)
-
+		c.SetCookie("token", tokenString, int(current_time.Unix()), "/", os.Getenv("ISSUER"), true, true)
 		c.SetCookie("token", t, int(expirationTime.Unix()), "/", os.Getenv("ISSUER"), true, true)
 	}
 
