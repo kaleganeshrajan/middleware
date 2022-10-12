@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 	"time"
 
@@ -16,7 +17,7 @@ type JWTService interface {
 }
 
 type jwtCustomClaims struct {
-	Name         string `json:"name"`
+	Name string `json:"name"`
 	// Admin bool   `json:"admin"`
 	jwt.StandardClaims
 }
@@ -101,8 +102,10 @@ func RefreshToken(tokenString string, session_time int64, c *gin.Context) error 
 			return err
 		}
 		fmt.Println("Token :- ", t)
-		c.SetCookie("token", tokenString, int(current_time.Unix()), "/", os.Getenv("ISSUER"), true, true)
-		c.SetCookie("token", t, int(expirationTime.Unix()), "/", os.Getenv("ISSUER"), true, true)
+
+		// c.SetCookie("token", t, int(expirationTime.Unix()), "/", os.Getenv("ISSUER"), true, true)
+		t_1 := &http.Cookie{Name: "token", Value: t, Expires: expirationTime, HttpOnly: true}
+		http.SetCookie(c.Writer, t_1)
 	}
 
 	// c_rer, _ := c.Cookie("token")
