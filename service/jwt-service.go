@@ -2,7 +2,6 @@ package service
 
 import (
 	"fmt"
-	"net/http"
 	"os"
 	"time"
 
@@ -101,9 +100,9 @@ func RefreshToken(tokenString string, session_time int64, c *gin.Context) error 
 			return err
 		}
 
-		// c.SetCookie("token", t, int(expirationTime.Unix()), "/", os.Getenv("ISSUER"), true, true)
-		t_1 := &http.Cookie{Name: "token", Value: t, Expires: expirationTime, HttpOnly: true}
-		http.SetCookie(c.Writer, t_1)
+		c.SetCookie("token", t, int(expirationTime.Unix()), "/", os.Getenv("ISSUER"), true, true)
+		// t_1 := &http.Cookie{Name: "token", Value: t, Expires: expirationTime, HttpOnly: true}
+		// http.SetCookie(c.Writer, t_1)
 	}
 
 	// c_rer, _ := c.Cookie("token")
