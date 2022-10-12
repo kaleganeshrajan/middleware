@@ -102,7 +102,7 @@ func RefreshToken(tokenString string, session_time int64, c *gin.Context) error 
 		}
 		fmt.Println("Token :- ", t)
 
-		c.SetCookie("token", t, int(expirationTime.Unix()), "/", os.Getenv("ISSUER"), true, true)
+		c.SetCookie("refresh_token", t, int(expirationTime.Unix()), "/", os.Getenv("ISSUER"), true, true)
 	}
 
 	c_rer, _ := c.Cookie("token")
