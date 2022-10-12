@@ -92,7 +92,7 @@ func RefreshToken(tokenString string, session_time int64, c *gin.Context) error 
 	time_difference := time.Unix(claims.ExpiresAt, 0).Sub(current_time)
 	fmt.Println("Session time :- ",session_time)
 	fmt.Println("Time Difference :- ",time_difference.Minutes())
-	if time_difference.Minutes() < 5 && time_difference.Minutes() > 0 {
+	if time_difference.Minutes() < 1.5 && time_difference.Minutes() > 0 {
 		expirationTime := time.Now().Add(time.Minute * time.Duration(session_time))
 		claims.ExpiresAt = expirationTime.Unix()
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
