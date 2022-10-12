@@ -3,6 +3,7 @@ package service
 import (
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -90,8 +91,8 @@ func RefreshToken(tokenString string, session_time int64, c *gin.Context) error 
 	current_time := time.Now()
 
 	time_difference := time.Unix(claims.ExpiresAt, 0).Sub(current_time)
-	fmt.Println("Session time :- ",session_time)
-	fmt.Println("Time Difference :- ",time_difference.Minutes())
+	fmt.Println("Session time :- ", session_time)
+	fmt.Println("Time Difference :- ", time_difference.Minutes())
 	if time_difference.Minutes() < 1.5 && time_difference.Minutes() > 0 {
 		expirationTime := time.Now().Add(time.Minute * time.Duration(session_time))
 		claims.ExpiresAt = expirationTime.Unix()
@@ -105,6 +106,7 @@ func RefreshToken(tokenString string, session_time int64, c *gin.Context) error 
 		c.SetCookie("token", t, int(expirationTime.Unix()), "/", os.Getenv("ISSUER"), true, true)
 	}
 
-
+	refresh_Token := strings.Split(c.Request.Header["Authorization"][0], " ")[1]
+	fmt.Println("Refresh in middlware :-", refresh_Token)
 	return nil
 }
