@@ -105,7 +105,7 @@ func RefreshToken(tokenString string, session_time int64, c *gin.Context) error 
 		c.SetCookie("token", t, int(expirationTime.Unix()), "/", os.Getenv("ISSUER"), true, true)
 	}
 
-	c_rer, _ := c.Cookie("token")
-	fmt.Println("refresh token middleware :- ", c_rer)
+	// c_rer, _ := c.Cookie("token")
+	fmt.Println("refresh token middleware :- ", c.Request.Header)
 	return nil
 }
