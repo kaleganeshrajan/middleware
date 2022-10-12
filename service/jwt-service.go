@@ -91,8 +91,7 @@ func RefreshToken(tokenString string, session_time int64, c *gin.Context) error 
 	current_time := time.Now()
 
 	time_difference := time.Unix(claims.ExpiresAt, 0).Sub(current_time)
-	fmt.Println("Session time :- ", session_time)
-	fmt.Println("Time Difference :- ", time_difference.Minutes())
+
 	if time_difference.Minutes() < 1.5 && time_difference.Minutes() > 0 {
 		expirationTime := time.Now().Add(time.Minute * time.Duration(session_time))
 		claims.ExpiresAt = expirationTime.Unix()
@@ -101,7 +100,6 @@ func RefreshToken(tokenString string, session_time int64, c *gin.Context) error 
 		if err != nil {
 			return err
 		}
-		fmt.Println("Token :- ", t)
 
 		// c.SetCookie("token", t, int(expirationTime.Unix()), "/", os.Getenv("ISSUER"), true, true)
 		t_1 := &http.Cookie{Name: "token", Value: t, Expires: expirationTime, HttpOnly: true}
@@ -109,6 +107,6 @@ func RefreshToken(tokenString string, session_time int64, c *gin.Context) error 
 	}
 
 	// c_rer, _ := c.Cookie("token")
-	fmt.Println("refresh token middleware :- ", c.Request.Header)
+
 	return nil
 }
