@@ -47,6 +47,13 @@ func AuthorizeJWT() gin.HandlerFunc {
 // AuthorizeJWT validates the token with parametrs the http request, returning a 401 if it's not valid
 func Authorize_JWT_Parameters(session_time int64) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		enable_cross(c)
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+		
 		logger.Info("Log validation started")
 		const BEARER_SCHEMA = "Bearer "
 		authHeader := c.GetHeader("Authorization")
@@ -112,4 +119,11 @@ func AuthorizeJWTfromAuthorization() gin.HandlerFunc {
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
 	}
+}
+
+func enable_cross(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+	c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+	c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
 }
